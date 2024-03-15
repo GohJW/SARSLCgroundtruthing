@@ -39,4 +39,5 @@ The 4 subfolders:
 ### Snap
 Once geotiffs have been generated, using snap, create a new vector container under `Vector -> New Vector Data Container`. Create polygons to groundtruth targets, saving them
 to the vector container created.
-Within the vector container, fill in the given columns,
+Within the vector container with masks, fill out the individual chip details.
+`Note: currently the program only uses the aspect_
