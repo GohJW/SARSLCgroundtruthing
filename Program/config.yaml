@@ -1,0 +1,14 @@
+geotiffPathlist:
+  - 'data/SAR_CPLX_20190823071330_9.6G_HH_12_pres_2_fdc_246.sar.rgo.sig.nc'
+  - 'data/SAR_CPLX_20190823071330_9.6G_VH_11_pres_2_fdc_246.sar.rgo.sig.nc'
+
+shpPath: 'chiptest.shp'
+transpose: True
+outputFolder: for_training
+range_res: 0.7
+az_res: 0.7
+range_px: 0.1
+az_px: 0.1
+size: 20
+winout: 'hanning'
+sat: 2e-2
