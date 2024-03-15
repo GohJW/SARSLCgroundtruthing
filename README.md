@@ -4,6 +4,7 @@ A program used to process SLC images from netCDF4 format and generate geotiff, a
 ## How to use
 ### config.yaml
 The config.yaml file is used to specify the netCDF file locations, shpfile location, output folder location and chip parameters.
+> Note: We assume that the program takes the image as range for row and azimuth for column, if the image is not in this orientation set `Transpose` to ```True```
 ```
 netcdfPathlist:
   - 'data/SAR_CPLX_20190823071330_9.6G_HH_12_pres_2_fdc_246.sar.rgo.sig.nc'
@@ -25,7 +26,7 @@ The 4 subfolders:
 - `cropped-image`: Cropped chips in geotiff and npy formats. Chips numbered in generation order.
 - `cropped-label`: Row and Column coordinates of the mask used to crop the chip relative to the rows and columns of the corresponding geotiff images in `large-label`. Saved as csv.
 - `large-image`: Full geotiff images from the processing of netCDF data. Naming convention follows naming convention of original netCDF files.
-- `large-label`: Information of each chip:
+- `large-label`: Information of each chip from the corresponding geotiff:
   - chipnumber
   - latitude and longitude of chip centre
   - size of chip
@@ -40,4 +41,10 @@ The 4 subfolders:
 Once geotiffs have been generated, using snap, create a new vector container under `Vector -> New Vector Data Container`. Create polygons to groundtruth targets, saving them
 to the vector container created.
 Within the vector container with masks, fill out the individual chip details.
-`Note: currently the program only uses the aspect_
+> Note: currently the program only uses the `geometry` and `aspect_n` column, the other parameters are either calculated by the program or set in `config.yaml`. However, the program can be modified to use these inputs by modifying the dictionary in `processnetCDF.py`.
+
+Once the chips are all masked, export the vector container under `Vector -> Export -> Geometry as Shape file`. Save the shape file and change `shpPath` to the location of the shp
+file. Running the program with the new shp file will process the images and crop out the corresponding chips.
+> Note: Pixel size and resolution are currently fixed for all chips, that means that `netcdfPathlist` needs to be adjusted to crop chips of different sizes and resolutions. E.g.
+> cropping for X-band chips first, followed by cropping of KU-band chips with seperate resolution and pixel size.
+
