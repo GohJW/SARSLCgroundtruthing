@@ -1,6 +1,6 @@
 # SAR SLC groundtruthing program
 A program used to process SLC images from netCDF4 format and generate geotiff, as well as groundtruth and generation of chips from SNAP.
-
+This repo also contains functions that may not be utilized in the actual ground truthing program.
 ## How to use
 ### config.yaml
 The config.yaml file is used to specify the netCDF file locations, shpfile location, output folder location and chip parameters.
