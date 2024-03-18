@@ -2,6 +2,7 @@
 A program used to process SLC images from netCDF4 format and generate geotiff, as well as groundtruth and generation of chips from SNAP.
 This repo also contains functions that may not be utilized in the actual ground truthing program.
 ## How to use
+The main python script to run when using this program is `processnetCDF.py` under `processimage` folder.
 ### config.yaml
 The config.yaml file is used to specify the netCDF file locations, shpfile location, output folder location and chip parameters in the following format.
 > Note: We assume that the program takes the image as range for row and azimuth for column, if the image is not in this orientation set `transpose` to ```True```
