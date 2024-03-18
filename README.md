@@ -3,7 +3,7 @@ A program used to process SLC images from netCDF4 format and generate geotiff, a
 This repo also contains functions that may not be utilized in the actual ground truthing program.
 ## How to use
 ### config.yaml
-The config.yaml file is used to specify the netCDF file locations, shpfile location, output folder location and chip parameters.
+The config.yaml file is used to specify the netCDF file locations, shpfile location, output folder location and chip parameters in the following format.
 > Note: We assume that the program takes the image as range for row and azimuth for column, if the image is not in this orientation set `transpose` to ```True```
 ```
 netcdfPathlist:
