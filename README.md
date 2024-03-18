@@ -38,6 +38,7 @@ The 4 subfolders:
   - rangeres and azimuthres
   - rangepixelsize and azimuthpixelsize
   - 4 corner chip coordinates
+> Note: A sample `chiptest.shp` file has been provided in order to test the program. Replace this file with the actual shpfile of the cropped chips when using the program.
 ### Snap
 Once geotiffs have been generated, using snap, create a new vector container under `Vector -> New Vector Data Container`. Create polygons to groundtruth targets, saving them
 to the vector container created.
