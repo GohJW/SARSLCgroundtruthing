@@ -161,9 +161,6 @@ def processFileAndGetChips(configyamlPath):
                 window = 'hanning'
                 k = 1.4466
         
-        window = 'rect' ##hardcode
-        k = 0.89
-        
         transmittedpolarization = str(file.variables['TxPolarization'][:], 'utf-8')
         receivedpolarization = str(file.variables['RxPolarization'][:], 'utf-8')
         polarization = transmittedpolarization + receivedpolarization
@@ -294,8 +291,7 @@ def processFileAndGetChips(configyamlPath):
                 print(degradedslc.shape)
                 saveSLC(degradedslc, os.path.join(chipimageFolder, geotiffname + f'-{chipnumber}'))
                 degradedslc_compressed = compressImg(degradedslc, sat = float(d['sat']))
-                # #calculate the cropped modeltransformationtag
-                # croppedmodeltransformationtag = recalculateAffineTransformationMatrix(validmpdeltransformationtag, row_tl, col_tl)
+                # use either affine transform or ground control points to generate the geotiff image
                 # convertToGeotiff_affine(degradedslc_compressed, croppedmodeltransformationtag, gbpgridinfo, os.path.join(chipimageFolder, geotiffname + f'-{chipnumber}.tif'))
                 convertToGeotiff_gcp(degradedslc_compressed, latimage[row_tl:row_bl, col_tl: col_tr],lonimage[row_tl:row_bl, col_tl: col_tr], os.path.join(chipimageFolder, geotiffname + f'-{chipnumber}.tif'))
                 grazingangle = getGrazingAngle(orbitlatitude, orbitlongitude, orbitheight, lat, lon)
@@ -315,90 +311,6 @@ def processFileAndGetChips(configyamlPath):
                     writer = csv.writer(file)
                     writer.writerow(maskarray)
         print('all chips sucessfully cropped')
-        
-    #no yaml file found, manual input
-    # else:
-    #     while True:
-    #         print('please input lat, lon, size, aspect, NESO, desired oprowres, oprowpixsize, opcolres, opcolpixsize, winout and saturation level. Use exit to quit.')
-    #         input_value = input()
-            
-    #         #degrade a chip
-    #         try:
-    #             if input_value == 'exit':
-    #                 break
-    #             else:               
-    #             #cut a chip
-    #                     d = dict() #dictionary to save the key value pair inputs
-    #                     for pair in input_value.split():  #lat lon size aspect NESO oprowres oprowpixsize opcolres opcolpixsize winout sat
-    #                         key, value = pair.split(':')
-    #                         d.update({key.strip(): value.strip()})
-                        
-    #                     #get last chip number
-    #                     filelist = glob.glob(chipimageFolder + '\\*')
-    #                     if filelist:
-    #                         latestfile = max(filelist, key=os.path.getmtime)
-    #                         name = latestfile.split('\\')[-1]
-    #                         chipnumber = int(name.split('-')[-1].split('.')[0]) + 1
-    #                     else:
-    #                         chipnumber = 0
-    #                     print('---------------')
-    #                     print('chipnumber: ', chipnumber)
-                            
-    #                     #go through each image
-    #                     for geotiffname in geotiffnamelist.keys():
-    #                         slcimage = slcimagelist[geotiffname]
-    #                         transpose = imagedata['transpose']
-    #                         polarization = polarizationlist[geotiffname]
-    #                         window = windowlist[geotiffname]
-    #                         gbpgridinfo = gbpgridinfolist[geotiffname]
-    #                         orblatimage = orblatimagelist[geotiffname]
-    #                         orblonimage = orblonimagelist[geotiffname]
-    #                         orbheightimage = orbheightimagelist[geotiffname]
-    #                         orbitlatitude = orbitlatitudelist[geotiffname]
-    #                         orbitlongitude = orbitlongitudelist[geotiffname]
-    #                         orbitheight = orbitheightlist[geotiffname]
-    #                         latimage = latimagelist[geotiffname]
-    #                         lonimage = lonimagelist[geotiffname]
-    #                         groundrangepixsize = groundrangepixsizelist[geotiffname]
-    #                         crossrangepixsize = crossrangepixsizelist[geotiffname]
-    #                         azimuthres = azimuthreslist[geotiffname]
-    #                         rangeres = rangereslist[geotiffname]
-    #                         wavelength = wavelengthlist[geotiffname]
-                            
-    #                         #calculate the position of the chip based on the radius of the earth and the given centre latitude and longitude coordinates
-    #                         R = 6371 #radius of earth
-    #                         size_km = float(d['size'])/1000
-    #                         distance = sqrt((size_km/2)**2 + (size_km/2)**2)
-    #                         Ad = distance/R #angular distance
-                            
-    #                         #from centre latlon, we find the top left to crop the window        
-    #                         b_tl = 315
-    #                         lat_tl, lon_tl = findCornerLatLonGivenDistance(float(d['lat']), float(d['lon']), Ad, b_tl)
-    #                         row_tl, col_tl = getPixelfromGeotiff(lat_tl, lon_tl, os.path.join(geotiffimageFolder, geotiffname + '.tif'))
-    #                         row_tl, row_bl, col_tl, col_tr = getWindowBoundaries(slcimage, row_tl, col_tl, crossrangepixsize, groundrangepixsize, float(d['size']))
-    #                         croppedslc = cropSLC(slcimage,row_tl, row_bl,col_tl, col_tr)
-    #                         print('imageshape: ', croppedslc.shape)
-                            
-    #                         #calculate the cropped modeltransformationtag
-    #                         croppedmodeltransformationtag = recalculateAffineTransformationMatrix(validmpdeltransformationtag, row_tl, col_tl)
-                            
-    #                         #adjust the phase of the image before performing degradation
-    #                         croppedslc_phaseadjusted = adjustPhase(croppedslc, latimage[row_tl:row_bl, col_tl:col_tr],lonimage[row_tl:row_bl, col_tl:col_tr], orblatimage[row_tl:row_bl, col_tl:col_tr], orblonimage[row_tl:row_bl, col_tl:col_tr], orbheightimage[row_tl:row_bl, col_tl:col_tr], wavelength)
-    #                         degradedslc,oprowres,oprowpixsize,opcolres,opcolpixsize ,_ = degradeSLC(croppedslc_phaseadjusted,transpose, azimuthres, rangeres, groundrangepixsize, crossrangepixsize, float(d['oprowres']), float(d['oprowpixsize']), float(d['opcolres']), float(d['opcolpixsize']), window, d['winout'])
-    #                         # print(degradedslc.shape)
-    #                         saveSLC(degradedslc, os.path.join(chipimageFolder, geotiffname + f'-{chipnumber}'))
-    #                         degradedslc_compressed = compressImg(degradedslc, sat = float(d['sat']))
-    #                         convertToGeotiff_affine(degradedslc_compressed, croppedmodeltransformationtag, gbpgridinfo, os.path.join(chipimageFolder, geotiffname + f'-{chipnumber}.tif'))
-    #                         grazingangle = getGrazingAngle(orbitlatitude, orbitlongitude, orbitheight, d['lat'], d['lon'])
-    #                         # cropGeotiff(os.path.join(geotiffimageFolder, f'{geotiffname}.tif'), col_tl, col_tr,row_tl, row_bl, os.path.join(chipimageFolder,f'{geotiffname}-{chipnumber}'))
-    #                         with open(os.path.join(geotifflabelFolder, geotiffname + '.csv'), 'a', newline = '') as file:
-    #                             writer = csv.writer(file)
-    #                             writer.writerow([int(chipnumber),float(d['lat']),float(d['lon']),d['size'],d.get('aspect'),grazingangle,d.get('NESO'),window,groundrangepixsize,crossrangepixsize, azimuthres, rangeres, row_tl, row_bl, col_tl, col_tr])                        
-    #                         print('done.')                   
-    #         except Exception as error:
-    #             print(error)
-                    
-        
         
         
 if __name__ == '__main__':
