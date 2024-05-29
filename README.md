@@ -46,7 +46,7 @@ Within the vector container with masks, fill out the individual chip details.
 > Note: currently the program only uses the `geometry` and `aspect_n` column, the other parameters are either calculated by the program or set in `config.yaml`. However, the program can be modified to use these inputs by modifying the dictionary in `processnetCDF.py`.
 
 Once the chips are all masked, export the vector container under `Vector -> Export -> Geometry as Shape file`. Save the shape file and change `shpPath` to the location of the shp
-file. Running the program with the new shp file will process the images and create a new yaml file `chips.yaml`. This file will contain the parameters of each chip, which will then be read by the program to crop out the corresponding chips.
+file. Running the `processnetCDF.py` with the new shp file will process the images and create a new yaml file `chips.yaml`. This file will contain the parameters of each chip, which will then be read by the program to crop out the corresponding chips.
 > Note: Pixel size and resolution are currently fixed for all chips, that means that `netcdfPathlist` needs to be adjusted to crop chips of different sizes and resolutions. E.g.
 > cropping for X-band chips first, followed by cropping of KU-band chips with seperate resolution and pixel size.
 
